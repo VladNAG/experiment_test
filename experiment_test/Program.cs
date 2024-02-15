@@ -1,4 +1,10 @@
 
+using experiment_test.Data;
+using experiment_test.Data.Repository;
+using experiment_test.Interfeces;
+using experiment_test.Servises;
+using Microsoft.EntityFrameworkCore;
+
 namespace experiment_test
 {
     public class Program
@@ -6,11 +12,17 @@ namespace experiment_test
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<DataProviderDbContent>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services to the container.
+            builder.Services.AddTransient<IServise, ExperimentServise>();
+            builder.Services.AddTransient<IExperimetRepository, ExperimetRepository>();
+            builder.Services.AddTransient<IDeviseRepository, DeviseRepository>();
+
+            builder.Services.AddCors();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
