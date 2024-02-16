@@ -30,7 +30,7 @@ namespace experiment_test.Controllers
             }
             if (devise is null)
             {
-                //создаем девайс
+                _serviceProvider.AddNewDevise(token);
                 //"добавляем логику ехперемента"
                 //return $"key:{Result.exp} value:{Result.result}"
             }
