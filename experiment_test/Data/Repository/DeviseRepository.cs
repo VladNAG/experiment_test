@@ -11,6 +11,13 @@ namespace experiment_test.Data.Repository
         {
             this._appDbContent = _appDbContent;
         }
+
+        public void AddNewDevise(Devise devise)
+        {
+            _appDbContent.Devises.Add(devise);
+            _appDbContent.SaveChanges();
+        }
+
         public Devise GetDevise(string token)
         {
 

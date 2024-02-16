@@ -30,17 +30,18 @@ namespace experiment_test.Controllers
             }
             if (devise is null)
             {
-                _serviceProvider.AddNewDevise(token);
-                //"добавляем логику ехперемента"
+                Devise newdevise = new Devise { Token = token, FirstRequst = DateTime.Now };
+                _serviceProvider.AddNewDevise(newdevise);
+                _serviceProvider.DoExperiment(experiment, token);
                 //return $"key:{Result.exp} value:{Result.result}"
             }
             if (devise.FirstRequst > experiment.StartExp)
             {
-                //return "для него нет експееремента возвращаем полследнее значенее";
+                //return "для него нет експееремента возвращаем полследнее значенее";или бед реквст
             }
             else
-            {
-                //идем в список результатов
+            {   
+                //проводим експеремент 
                 //return $"key:{Result.exp} value:{Result.result}"
             }
             return BadRequest(experiment);

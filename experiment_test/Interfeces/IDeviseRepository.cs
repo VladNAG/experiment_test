@@ -5,5 +5,7 @@ namespace experiment_test.Interfeces
     public interface IDeviseRepository
     {
         public Devise GetDevise(string token);
+
+        public void AddNewDevise(Devise devise);
     }
 }
