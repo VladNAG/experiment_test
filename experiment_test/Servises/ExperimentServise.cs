@@ -1,5 +1,6 @@
 ﻿using experiment_test.Data.Entityes;
 using experiment_test.Interfeces;
+using System.Drawing;
 
 namespace experiment_test.Servises
 {
@@ -31,14 +32,40 @@ namespace experiment_test.Servises
             return _experimetRepository.GetExperiment(name_experiment);
         }
 
-        public void DoExperiment(Experiment experiment, string token)
+        public void DoExperiment(Experiment experiment, Devise devise)
         {
-            experiment.ExperimentOptions = _experimentOptionsRepository.GetExpOptions(experiment);
+            var random = new Random();
+            int randomNum = random.Next(100);
+            var value = "";
+            if (randomNum < experiment.ExperimentOptions[0].Percent )
+            {
+                value = experiment.ExperimentOptions[0].Value;
+            }
+            if (randomNum < experiment.ExperimentOptions[0].Percent + experiment.ExperimentOptions[1].Percent)
+            {
+                value = experiment.ExperimentOptions[1].Value;
+            }
+            if (randomNum < experiment.ExperimentOptions[0].Percent + experiment.ExperimentOptions[1].Percent + experiment.ExperimentOptions[2].Percent)
+            {
+                value = experiment.ExperimentOptions[2].Value;
+            }
+            if (randomNum < experiment.ExperimentOptions[0].Percent + experiment.ExperimentOptions[1].Percent + experiment.ExperimentOptions[2].Percent + experiment.ExperimentOptions[3].Percent)
+            {
+                value = experiment.ExperimentOptions[3].Value;
+            }
+            var result = new Result { DeviseId = devise.Id, ExperimentId = experiment.Id, result = value };
+            _resultRepository.AddResult(result);
+
         }
 
         public void AddResult(Result result)
         {
             _resultRepository.AddResult(result);
+        }
+
+        public List<ExperimentOption> GetExpOptions(Experiment experiment)
+        {
+           return _experimentOptionsRepository.GetExpOptions(experiment);
         }
     }
 }

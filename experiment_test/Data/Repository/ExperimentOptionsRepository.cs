@@ -14,7 +14,7 @@ namespace experiment_test.Data.Repository
         }
         public List<ExperimentOption> GetExpOptions(Experiment experiment)
         {
-            return _appDbContent.ExperimentOptions.Include(p=>p.ExperimentId == experiment.Id).ToList();
+            return _appDbContent.ExperimentOption.Include(p=>p.ExperimentId == experiment.Id).ToList();
         }
     }
 }

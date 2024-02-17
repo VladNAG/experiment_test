@@ -1,5 +1,6 @@
 ﻿using experiment_test.Data.Entityes;
 using experiment_test.Interfeces;
+using Microsoft.EntityFrameworkCore;
 
 namespace experiment_test.Data.Repository
 {
@@ -14,7 +15,9 @@ namespace experiment_test.Data.Repository
 
         public Experiment GetExperiment(string name_experiment)
         {
-            return _appDbContent.Experiments.FirstOrDefault(p => p.Name == name_experiment);
+            var experiment = _appDbContent.Experiments.FirstOrDefault(p => p.Name == name_experiment);
+            var experimentExperimentOptions = _appDbContent.Experiments.Include(p=>p.ExperimentOptions).ToList();
+            return experiment;
         }
     }
 }

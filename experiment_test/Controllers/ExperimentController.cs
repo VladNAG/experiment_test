@@ -22,17 +22,17 @@ namespace experiment_test.Controllers
         [Route("/[controller]/{name_experiment}")]
         public IActionResult GetValue([FromRoute] string name_experiment, [FromQuery] string token)
         {
-            Experiment experiment = _serviceProvider.GetExperiment(name_experiment);
-            Devise devise = _serviceProvider.GetDevise(token);
+            var experiment = _serviceProvider.GetExperiment(name_experiment);
+            var devise = _serviceProvider.GetDevise(token);
             if (experiment is null)
             {
                 return BadRequest(experiment);
             }
             if (devise is null)
             {
-                Devise newdevise = new Devise { Token = token, FirstRequst = DateTime.Now };
+                var newdevise = new Devise { Token = token, FirstRequst = DateTime.Now };
                 _serviceProvider.AddNewDevise(newdevise);
-                _serviceProvider.DoExperiment(experiment, token);
+                _serviceProvider.DoExperiment(experiment, newdevise);
                 //return $"key:{Result.exp} value:{Result.result}"
             }
             if (devise.FirstRequst > experiment.StartExp)

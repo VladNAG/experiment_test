@@ -19,7 +19,9 @@ namespace experiment_test
             builder.Services.AddTransient<IServise, ExperimentServise>();
             builder.Services.AddTransient<IResultRepository, ResultRepository>();
             builder.Services.AddTransient<IExperimetRepository, ExperimetRepository>();
+            builder.Services.AddTransient<IExperimentOptionsRepository, ExperimentOptionsRepository>();
             builder.Services.AddTransient<IDeviseRepository, DeviseRepository>();
+
 
             builder.Services.AddCors();
 
