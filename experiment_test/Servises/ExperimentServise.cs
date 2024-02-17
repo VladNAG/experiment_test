@@ -8,11 +8,13 @@ namespace experiment_test.Servises
         private readonly IResultRepository _resultRepository;
         private readonly IExperimetRepository _experimetRepository;
         private readonly IDeviseRepository _deviseRepository;
-        public ExperimentServise(IExperimetRepository experimetRepository, IDeviseRepository deviseRepository, IResultRepository resultRepository)
+        private readonly IExperimentOptionsRepository _experimentOptionsRepository;
+        public ExperimentServise(IExperimetRepository experimetRepository, IDeviseRepository deviseRepository, IResultRepository resultRepository, IExperimentOptionsRepository experimentOptionsRepository)
         {
             _experimetRepository = experimetRepository;
             _deviseRepository = deviseRepository;
             _resultRepository = resultRepository;
+            _experimentOptionsRepository = experimentOptionsRepository;
         }
 
         public Devise GetDevise(string token)
@@ -31,7 +33,7 @@ namespace experiment_test.Servises
 
         public void DoExperiment(Experiment experiment, string token)
         {
-            
+            experiment.ExperimentOptions = _experimentOptionsRepository.GetExpOptions(experiment);
         }
 
         public void AddResult(Result result)

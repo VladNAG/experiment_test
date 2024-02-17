@@ -40,11 +40,20 @@ namespace experiment_test.Controllers
                 //return "для него нет експееремента возвращаем полследнее значенее";или бед реквст
             }
             else
-            {   
+            {
                 //проводим експеремент 
                 //return $"key:{Result.exp} value:{Result.result}"
             }
             return BadRequest(experiment);
         }
+
+        /*[HttpGet]
+        [Route("/[controller]/[statistics]")]
+        public IActionResult GetStatistics()
+        {
+
+            return BadRequest();
+        }*/
+
     }
 }

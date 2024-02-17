@@ -47,8 +47,7 @@ namespace experiment_test.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Percent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    IdExperiment = table.Column<int>(type: "int", nullable: false),
-                    ExperimentId = table.Column<int>(type: "int", nullable: true)
+                    ExperimentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,7 +56,8 @@ namespace experiment_test.Migrations
                         name: "FK_ExperimentOption_Experiments_ExperimentId",
                         column: x => x.ExperimentId,
                         principalTable: "Experiments",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,10 +66,8 @@ namespace experiment_test.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdDevise = table.Column<int>(type: "int", nullable: false),
-                    DeviseId = table.Column<int>(type: "int", nullable: true),
-                    IdExperiment = table.Column<int>(type: "int", nullable: false),
-                    ExperimentId = table.Column<int>(type: "int", nullable: true),
+                    DeviseId = table.Column<int>(type: "int", nullable: false),
+                    ExperimentId = table.Column<int>(type: "int", nullable: false),
                     result = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -79,12 +77,14 @@ namespace experiment_test.Migrations
                         name: "FK_Results_Devises_DeviseId",
                         column: x => x.DeviseId,
                         principalTable: "Devises",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Results_Experiments_ExperimentId",
                         column: x => x.ExperimentId,
                         principalTable: "Experiments",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

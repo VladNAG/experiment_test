@@ -68,10 +68,7 @@ namespace experiment_test.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ExperimentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdExperiment")
+                    b.Property<int>("ExperimentId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Percent")
@@ -95,16 +92,10 @@ namespace experiment_test.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("DeviseId")
+                    b.Property<int>("DeviseId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ExperimentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdDevise")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdExperiment")
+                    b.Property<int>("ExperimentId")
                         .HasColumnType("int");
 
                     b.Property<string>("result")
@@ -123,7 +114,9 @@ namespace experiment_test.Migrations
                 {
                     b.HasOne("experiment_test.Data.Entityes.Experiment", "Experiment")
                         .WithMany("ExperimentOptions")
-                        .HasForeignKey("ExperimentId");
+                        .HasForeignKey("ExperimentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Experiment");
                 });
@@ -132,11 +125,15 @@ namespace experiment_test.Migrations
                 {
                     b.HasOne("experiment_test.Data.Entityes.Devise", "Devise")
                         .WithMany()
-                        .HasForeignKey("DeviseId");
+                        .HasForeignKey("DeviseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("experiment_test.Data.Entityes.Experiment", "Experiment")
                         .WithMany()
-                        .HasForeignKey("ExperimentId");
+                        .HasForeignKey("ExperimentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Devise");
 

@@ -14,6 +14,7 @@ namespace experiment_test.Data
         public DbSet<Result> Results { get; set; }
         public DbSet<Experiment> Experiments { get; set; }
         public DbSet<Devise> Devises { get; set; }
+        public DbSet<ExperimentOption> ExperimentOptions { get; set; }
 
     }
 }
