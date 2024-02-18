@@ -9,21 +9,21 @@ namespace experiment_test.Controllers
     [Route("[controller]")]
     public class ExperimentController : ControllerBase
     {
-        private readonly IServise _serviceProvider;
+        private readonly IServise _service;
 
 
 
-        public ExperimentController(IServise serviceProvider)
+        public ExperimentController(IServise service)
         {
-            _serviceProvider = serviceProvider;
+            _service = service;
         }
 
         [HttpGet]
         [Route("/[controller]/{name_experiment}")]
-        public IActionResult GetValue([FromRoute] string name_experiment, [FromQuery] string token)
+        public async Task<IActionResult> GetValueAsunc([FromRoute] string name_experiment, [FromQuery] string token)
         {
-            var experiment = _serviceProvider.GetExperiment(name_experiment);
-            var devise = _serviceProvider.GetDevise(token);
+            var experiment = _service.GetExperiment(name_experiment);
+            var devise = _service.GetDevise(token);
             if (experiment is null)
             {
                 return BadRequest(experiment);
@@ -31,10 +31,10 @@ namespace experiment_test.Controllers
             if (devise is null)
             {
                 var newdevise = new Devise { Token = token, FirstRequst = DateTime.Now };
-                _serviceProvider.AddNewDevise(newdevise);
-                _serviceProvider.DoExperiment(experiment, newdevise);
-                //var result = _serviceProvider.GetResult(newdevise);
-               //return $"key:{Result.exp} value:{Result.result}"
+                _service.AddNewDevise(newdevise);
+                _service.DoExperiment(experiment, newdevise);
+                var _result = await _service.GetResultAsync(newdevise);
+                return Ok($"key:{_result.Experiment.Name} value:{_result.result}");
             }
             if (devise.FirstRequst > experiment.StartExp)
             {

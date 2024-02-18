@@ -5,5 +5,6 @@ namespace experiment_test.Interfeces
     public interface IResultRepository
     {
         public void AddResult(Result result);
+        public Task<Result> GetResultAsync(Devise devise);
     }
 }

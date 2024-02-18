@@ -10,6 +10,7 @@ namespace experiment_test.Interfeces
         public void AddNewDevise(Devise devise);
         public Experiment GetExperiment(string name_experiment);
         public void AddResult(Result result);
+        public Task<Result> GetResultAsync(Devise devise);
 
         public List<ExperimentOption> GetExpOptions(Experiment experiment);
 
