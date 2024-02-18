@@ -33,7 +33,8 @@ namespace experiment_test.Controllers
                 var newdevise = new Devise { Token = token, FirstRequst = DateTime.Now };
                 _serviceProvider.AddNewDevise(newdevise);
                 _serviceProvider.DoExperiment(experiment, newdevise);
-                //return $"key:{Result.exp} value:{Result.result}"
+                //var result = _serviceProvider.GetResult(newdevise);
+               //return $"key:{Result.exp} value:{Result.result}"
             }
             if (devise.FirstRequst > experiment.StartExp)
             {

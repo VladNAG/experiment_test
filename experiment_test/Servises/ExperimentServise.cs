@@ -35,9 +35,26 @@ namespace experiment_test.Servises
         public void DoExperiment(Experiment experiment, Devise devise)
         {
             var random = new Random();
-            int randomNum = random.Next(100);
+            int randomNum = 35; // random.Next(100);
             var value = "";
-            if (randomNum < experiment.ExperimentOptions[0].Percent )
+            decimal x = 0;
+
+            for (int i = 0; i < experiment.ExperimentOptions.Count; i++)
+            {
+                x += experiment.ExperimentOptions[i].Percent;
+                if (randomNum < x)
+                {
+                    value = experiment.ExperimentOptions[i].Value;
+                    break;
+                }
+                if (x > 100)
+                {
+                    throw new Exception();
+                }
+            }
+
+
+            /*if (randomNum < experiment.ExperimentOptions[0].Percent)
             {
                 value = experiment.ExperimentOptions[0].Value;
             }
@@ -52,7 +69,7 @@ namespace experiment_test.Servises
             if (randomNum < experiment.ExperimentOptions[0].Percent + experiment.ExperimentOptions[1].Percent + experiment.ExperimentOptions[2].Percent + experiment.ExperimentOptions[3].Percent)
             {
                 value = experiment.ExperimentOptions[3].Value;
-            }
+            }*/
             var result = new Result { DeviseId = devise.Id, ExperimentId = experiment.Id, result = value };
             _resultRepository.AddResult(result);
 
@@ -65,7 +82,7 @@ namespace experiment_test.Servises
 
         public List<ExperimentOption> GetExpOptions(Experiment experiment)
         {
-           return _experimentOptionsRepository.GetExpOptions(experiment);
+            return _experimentOptionsRepository.GetExpOptions(experiment);
         }
     }
 }
