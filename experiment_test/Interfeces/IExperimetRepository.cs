@@ -4,7 +4,7 @@ namespace experiment_test.Interfeces
 {
     public interface IExperimetRepository
     {
-        public Experiment GetExperiment(string name_experiment);
+        public Task<Experiment> GetExperimentAsync(string name_experiment);
 
     }
 }

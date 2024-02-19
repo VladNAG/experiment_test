@@ -1,5 +1,6 @@
 ﻿using experiment_test.Data.Entityes;
 using experiment_test.Interfeces;
+using Microsoft.EntityFrameworkCore;
 
 namespace experiment_test.Data.Repository
 {
@@ -12,16 +13,16 @@ namespace experiment_test.Data.Repository
             this._appDbContent = _appDbContent;
         }
 
-        public void AddNewDevise(Devise devise)
+        public async Task AddNewDeviseAsync(Devise devise)
         {
-            _appDbContent.Devises.Add(devise);
-            _appDbContent.SaveChanges();
+           await _appDbContent.Devises.AddAsync(devise);
+           await _appDbContent.SaveChangesAsync();
         }
 
-        public Devise GetDevise(string token)
+        public async Task<Devise> GetDeviseAsync(string token)
         {
 
-            return _appDbContent.Devises.FirstOrDefault(p => p.Token == token);
+            return await _appDbContent.Devises.FirstOrDefaultAsync(p => p.Token == token);
 
         }
     }

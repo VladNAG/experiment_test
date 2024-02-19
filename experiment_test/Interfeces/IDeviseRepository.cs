@@ -4,8 +4,8 @@ namespace experiment_test.Interfeces
 {
     public interface IDeviseRepository
     {
-        public Devise GetDevise(string token);
+        public Task<Devise> GetDeviseAsync(string token);
 
-        public void AddNewDevise(Devise devise);
+        public Task AddNewDeviseAsync(Devise devise);
     }
 }

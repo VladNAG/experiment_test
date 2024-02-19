@@ -13,11 +13,9 @@ namespace experiment_test.Data.Repository
             this._appDbContent = _appDbContent;
         }
 
-        public Experiment GetExperiment(string name_experiment)
+        public async Task<Experiment> GetExperimentAsync(string name_experiment)
         {
-            var experiment = _appDbContent.Experiments.FirstOrDefault(p => p.Name == name_experiment);
-            var experimentExperimentOptions = _appDbContent.Experiments.Include(p=>p.ExperimentOptions).ToList();
-            return experiment;
+            return await _appDbContent.Experiments.Include(p => p.ExperimentOptions).FirstOrDefaultAsync(p => p.Name == name_experiment);
         }
     }
 }

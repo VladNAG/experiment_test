@@ -14,15 +14,21 @@ namespace experiment_test.Data.Repository
             this._appDbContent = _appDbContent;
         }
 
-        public void AddResult(Result result)
+        public async Task AddResultAsync(Result result)
         {
-            _appDbContent.Results.Add(result);
-            _appDbContent.SaveChanges();
+           await _appDbContent.Results.AddAsync(result);
+           await _appDbContent.SaveChangesAsync();
         }
 
         public async Task<Result> GetResultAsync(Devise devise)
         {
            return await _appDbContent.Results.FirstOrDefaultAsync(p => p.DeviseId == devise.Id);
         }
+
+        public async Task<List<Result>> GetListResultAsync(Experiment experiment)
+        {
+            return await _appDbContent.Results.Include(c => c.Devise).Where(p => p.ExperimentId == experiment.Id).ToListAsync();
+        }
+
     }
 }

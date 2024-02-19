@@ -18,21 +18,21 @@ namespace experiment_test.Servises
             _experimentOptionsRepository = experimentOptionsRepository;
         }
 
-        public Devise GetDevise(string token)
+        public async Task<Devise> GetDeviseAsync(string token)
         {
-            return _deviseRepository.GetDevise(token);
+            return await _deviseRepository.GetDeviseAsync(token);
         }
-        public void AddNewDevise(Devise devise)
+        public async Task AddNewDeviseAsync(Devise devise)
         {
-            _deviseRepository.AddNewDevise(devise);
-        }
-
-        public Experiment GetExperiment(string name_experiment)
-        {
-            return _experimetRepository.GetExperiment(name_experiment);
+           await _deviseRepository.AddNewDeviseAsync(devise);
         }
 
-        public void DoExperiment(Experiment experiment, Devise devise)
+        public async Task<Experiment> GetExperimentAsync(string name_experiment)
+        {
+            return await _experimetRepository.GetExperimentAsync(name_experiment);
+        }
+
+        public async Task DoExperimentAsyc(Experiment experiment, Devise devise)
         {
             var random = new Random();
             int randomNum = random.Next(101);
@@ -53,23 +53,29 @@ namespace experiment_test.Servises
                 }
             }
             var result = new Result { DeviseId = devise.Id, ExperimentId = experiment.Id, result = value };
-            _resultRepository.AddResult(result);
+           await _resultRepository.AddResultAsync(result);
 
         }
 
-        public void AddResult(Result result)
+        public async Task AddResultAsync(Result result)
         {
-            _resultRepository.AddResult(result);
+           await _resultRepository.AddResultAsync(result);
         }
 
+        //YAGNI
         public List<ExperimentOption> GetExpOptions(Experiment experiment)
         {
             return _experimentOptionsRepository.GetExpOptions(experiment);
         }
 
-        public Task<Result> GetResultAsync(Devise devise)
+        public async Task<Result> GetResultAsync(Devise devise)
         {
-           return _resultRepository.GetResultAsync(devise);
+           return await _resultRepository.GetResultAsync(devise);
+        }
+
+        public async Task<List<Result>> GetListResultAsync(Experiment experiment)
+        {
+           return await _resultRepository.GetListResultAsync(experiment);
         }
     }
 }

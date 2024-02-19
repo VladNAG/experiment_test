@@ -2,6 +2,7 @@
 using experiment_test.Interfeces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 
 namespace experiment_test.Controllers
 {
@@ -10,8 +11,6 @@ namespace experiment_test.Controllers
     public class ExperimentController : ControllerBase
     {
         private readonly IServise _service;
-
-
 
         public ExperimentController(IServise service)
         {
@@ -22,39 +21,64 @@ namespace experiment_test.Controllers
         [Route("/[controller]/{name_experiment}")]
         public async Task<IActionResult> GetValueAsunc([FromRoute] string name_experiment, [FromQuery] string token)
         {
-            var experiment = _service.GetExperiment(name_experiment);
-            var devise = _service.GetDevise(token);
+            var experiment = await _service.GetExperimentAsync(name_experiment);
+            var devise = await _service.GetDeviseAsync(token);
+
             if (experiment is null)
             {
-                return BadRequest(experiment);
+                return BadRequest();
             }
+
             if (devise is null)
             {
+                //запит від девайсу в перше, зберігаємо та проводимо експеремент
                 var newdevise = new Devise { Token = token, FirstRequst = DateTime.Now };
-                _service.AddNewDevise(newdevise);
-                _service.DoExperiment(experiment, newdevise);
+                await _service.AddNewDeviseAsync(newdevise);
+                await _service.DoExperimentAsyc(experiment, newdevise);
                 var _result = await _service.GetResultAsync(newdevise);
                 return Ok($"key:{_result.Experiment.Name} value:{_result.result}");
             }
-            if (devise.FirstRequst > experiment.StartExp)
+
+            if (devise.FirstRequst < experiment.StartExp)
             {
-                //return "для него нет експееремента возвращаем полследнее значенее";или бед реквст
+                //Умовно першою опціею експерименту завжди буде початкове значення до початку експерименту
+                //якщо екперемент почався після першого запиту від девайсу повертаєм значення до початку експерименту
+                return Ok($"key:{experiment.Name} value:{experiment.ExperimentOptions[0].Value}");
             }
             else
             {
-                //проводим експеремент 
-                //return $"key:{Result.exp} value:{Result.result}"
+                // девайс одного разу отримав значення, то він завжди отримуватиме лише його (в рамках аксеременту, повторні запита не впливають на статистику)
+                // якщо девайс приймае учать в 1 експеременті, то про інші єксперементи він не знає
+                var _result = await _service.GetResultAsync(devise);
+                if (name_experiment != _result.Experiment.Name)
+                {
+                    return Ok($"key:{experiment.Name} value:{experiment.ExperimentOptions[0].Value}"); 
+                }
+                return Ok($"key:{_result.Experiment.Name} value:{_result.result}");
             }
-            return BadRequest(experiment);
         }
 
-        /*[HttpGet]
-        [Route("/[controller]/[statistics]")]
-        public IActionResult GetStatistics()
+        [HttpGet]
+        [Route("/[controller]/statistics/{name_experiment}")]
+        public async Task<IActionResult> GetStatisticsAsunc([FromRoute] string name_experiment)
         {
+            List<string> request = new(); 
+            var experiment = await _service.GetExperimentAsync(name_experiment);
+            if(experiment is null)
+            { return BadRequest(); }
+            var _result = await _service.GetListResultAsync(experiment);
+            foreach (var result in _result)
+            {
+                var stat = new Statistic();
+                stat.Name = result.Experiment.Name;
+                stat.Name = result.result;
+                var x = JsonSerializer.Serialize(stat);
 
-            return BadRequest();
-        }*/
+                request.Add(x);
+            }
+            
+            return Ok(request);
+        }
 
     }
 }
