@@ -9,13 +9,11 @@ namespace experiment_test.Servises
         private readonly IResultRepository _resultRepository;
         private readonly IExperimetRepository _experimetRepository;
         private readonly IDeviseRepository _deviseRepository;
-        private readonly IExperimentOptionsRepository _experimentOptionsRepository;
-        public ExperimentServise(IExperimetRepository experimetRepository, IDeviseRepository deviseRepository, IResultRepository resultRepository, IExperimentOptionsRepository experimentOptionsRepository)
+        public ExperimentServise(IExperimetRepository experimetRepository, IDeviseRepository deviseRepository, IResultRepository resultRepository)
         {
             _experimetRepository = experimetRepository;
             _deviseRepository = deviseRepository;
             _resultRepository = resultRepository;
-            _experimentOptionsRepository = experimentOptionsRepository;
         }
 
         public async Task<Devise> GetDeviseAsync(string token)
@@ -60,12 +58,6 @@ namespace experiment_test.Servises
         public async Task AddResultAsync(Result result)
         {
            await _resultRepository.AddResultAsync(result);
-        }
-
-        //YAGNI
-        public List<ExperimentOption> GetExpOptions(Experiment experiment)
-        {
-            return _experimentOptionsRepository.GetExpOptions(experiment);
         }
 
         public async Task<Result> GetResultAsync(Devise devise)

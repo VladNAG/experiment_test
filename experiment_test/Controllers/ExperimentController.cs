@@ -52,7 +52,7 @@ namespace experiment_test.Controllers
                 var _result = await _service.GetResultAsync(devise);
                 if (name_experiment != _result.Experiment.Name)
                 {
-                    return Ok($"key:{experiment.Name} value:{experiment.ExperimentOptions[0].Value}"); 
+                    return Ok($"key:{experiment.Name} value:{experiment.ExperimentOptions[0].Value}");
                 }
                 return Ok($"key:{_result.Experiment.Name} value:{_result.result}");
             }
@@ -62,21 +62,32 @@ namespace experiment_test.Controllers
         [Route("/[controller]/statistics/{name_experiment}")]
         public async Task<IActionResult> GetStatisticsAsunc([FromRoute] string name_experiment)
         {
-            List<string> request = new(); 
+            //List<string> request = new();
             var experiment = await _service.GetExperimentAsync(name_experiment);
-            if(experiment is null)
-            { return BadRequest(); }
-            var _result = await _service.GetListResultAsync(experiment);
-            foreach (var result in _result)
-            {
-                var stat = new Statistic();
-                stat.Name = result.Experiment.Name;
-                stat.Name = result.result;
-                var x = JsonSerializer.Serialize(stat);
 
-                request.Add(x);
+            if (experiment is null)
+            { return BadRequest(); }
+
+            var _result = await _service.GetListResultAsync(experiment);
+            var statisticHead = new StatisticHead();
+            statisticHead.TotalDevisesExperimant = _result.Count;
+            statisticHead.ExperementNeme = experiment.Name;
+
+            try  //якщо результатів немає, перехопимо вичлючення
+            {
+                for (int i = 0; i < _result[0].Experiment.ExperimentOptions.Count; i++)
+                {
+                    var statistic = new Statistic();
+                    statistic.NameOption = _result[0].Experiment.ExperimentOptions[i].Percent.ToString();
+                    statistic.ValueOptions = _result[0].Experiment.ExperimentOptions[i].Value;
+                    statistic.TotalDevisesOptions = _result.Count(x => x.result == _result[0].Experiment.ExperimentOptions[i].Value);
+                    statisticHead.Statistics.Add(statistic);
+                }
             }
-            
+            catch(ArgumentOutOfRangeException)
+            { return Ok($"key:{experiment.Name} value:no results"); }
+
+            var request = JsonSerializer.Serialize(statisticHead);
             return Ok(request);
         }
 

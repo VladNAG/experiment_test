@@ -13,7 +13,6 @@ namespace experiment_test.Interfeces
         public Task<Result> GetResultAsync(Devise devise);
 
         public Task<List<Result>> GetListResultAsync(Experiment experiment);
-        public List<ExperimentOption> GetExpOptions(Experiment experiment);
 
     }
 }
