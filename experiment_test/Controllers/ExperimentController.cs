@@ -1,8 +1,9 @@
 ﻿using experiment_test.Data.Entityes;
 using experiment_test.Interfeces;
+using experiment_test.ServiseEntityes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
 
 namespace experiment_test.Controllers
 {
@@ -36,14 +37,16 @@ namespace experiment_test.Controllers
                 await _service.AddNewDeviseAsync(newdevise);
                 await _service.DoExperimentAsyc(experiment, newdevise);
                 var _result = await _service.GetResultAsync(newdevise);
-                return Ok($"key:{_result.Experiment.Name} value:{_result.result}");
+                var experimentResultResponse = new ExperimentResultResponse { Key = _result.Experiment.Name, Value = _result.result };
+                return Ok(experimentResultResponse);
             }
 
             if (devise.FirstRequst < experiment.StartExp)
             {
                 //Умовно першою опціею експерименту завжди буде початкове значення до початку експерименту
                 //якщо екперемент почався після першого запиту від девайсу повертаєм значення до початку експерименту
-                return Ok($"key:{experiment.Name} value:{experiment.ExperimentOptions[0].Value}");
+                var experimentResultResponse = new ExperimentResultResponse { Key = experiment.Name, Value = experiment.ExperimentOptions[0].Value };
+                return Ok(experimentResultResponse);
             }
             else
             {
@@ -52,9 +55,11 @@ namespace experiment_test.Controllers
                 var _result = await _service.GetResultAsync(devise);
                 if (name_experiment != _result.Experiment.Name)
                 {
-                    return Ok($"key:{experiment.Name} value:{experiment.ExperimentOptions[0].Value}");
+                    var _experimentResultResponse = new ExperimentResultResponse { Key = experiment.Name, Value = experiment.ExperimentOptions[0].Value };
+                    return Ok(_experimentResultResponse);
                 }
-                return Ok($"key:{_result.Experiment.Name} value:{_result.result}");
+                var experimentResultResponse = new ExperimentResultResponse { Key = _result.Experiment.Name, Value = _result.result };
+                return Ok(experimentResultResponse);
             }
         }
 
@@ -65,8 +70,8 @@ namespace experiment_test.Controllers
             var experiment_list = await _service.GetListExperimentAsync();
             if (experiment_list is null)
             { return Ok($"Experiments Doesn't Exist"); }
-            var request = JsonSerializer.Serialize(await _service.GetAllStatisticAsync(experiment_list));
-            return Ok(request);
+            var statisticResultResponse = await _service.GetAllStatisticAsync(experiment_list);
+            return Ok(statisticResultResponse);
         }
 
     }
