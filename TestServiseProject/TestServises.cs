@@ -11,7 +11,7 @@ namespace TestServiseProject
         private readonly Mock<IResultRepository> _resultRepositoryMock = new Mock<IResultRepository>();
         private readonly Mock<IExperimetRepository> _experimetRepositoryMock = new Mock<IExperimetRepository>();
         private readonly Mock<IDeviseRepository> _deviseRepositoryMock = new Mock<IDeviseRepository>();
-        private async Task<List<Experiment>> GetALLTestExperimentAsync()
+        private Task<List<Experiment>> GetALLTestExperimentAsync()
         {
             List<Experiment> experimentList = new()
             {
@@ -30,12 +30,12 @@ namespace TestServiseProject
                 }}
             };
 
-            return experimentList;
+            return Task.FromResult(experimentList);
         }
-        private async Task<List<Experiment>> GetALLTestExperimentAsync_Null()
+        private Task<List<Experiment>> GetALLTestExperimentAsync_Null()
         {
             List<Experiment>? experimentList = null;
-            return experimentList;
+            return Task.FromResult(experimentList);
         }
 
 
