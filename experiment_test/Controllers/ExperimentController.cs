@@ -26,7 +26,7 @@ namespace experiment_test.Controllers
 
             if (experiment is null)
             {
-                return BadRequest();
+                return Ok($"Experiment {name_experiment} Doesn't Exist");
             }
 
             if (devise is null)
@@ -59,35 +59,13 @@ namespace experiment_test.Controllers
         }
 
         [HttpGet]
-        [Route("/[controller]/statistics/{name_experiment}")]
-        public async Task<IActionResult> GetStatisticsAsunc([FromRoute] string name_experiment)
+        [Route("/[controller]/statistics")]
+        public async Task<IActionResult> GetStatisticsAsunc()
         {
-            //List<string> request = new();
-            var experiment = await _service.GetExperimentAsync(name_experiment);
-
-            if (experiment is null)
-            { return BadRequest(); }
-
-            var _result = await _service.GetListResultAsync(experiment);
-            var statisticHead = new StatisticHead();
-            statisticHead.TotalDevisesExperimant = _result.Count;
-            statisticHead.ExperementNeme = experiment.Name;
-
-            try  //якщо результатів немає, перехопимо вичлючення
-            {
-                for (int i = 0; i < _result[0].Experiment.ExperimentOptions.Count; i++)
-                {
-                    var statistic = new Statistic();
-                    statistic.NameOption = _result[0].Experiment.ExperimentOptions[i].Percent.ToString();
-                    statistic.ValueOptions = _result[0].Experiment.ExperimentOptions[i].Value;
-                    statistic.TotalDevisesOptions = _result.Count(x => x.result == _result[0].Experiment.ExperimentOptions[i].Value);
-                    statisticHead.Statistics.Add(statistic);
-                }
-            }
-            catch(ArgumentOutOfRangeException)
-            { return Ok($"key:{experiment.Name} value:no results"); }
-
-            var request = JsonSerializer.Serialize(statisticHead);
+            var experiment_list = await _service.GetListExperimentAsync();
+            if (experiment_list is null)
+            { return Ok($"Experiments Doesn't Exist"); }
+            var request = JsonSerializer.Serialize(await _service.GetAllStatisticAsync(experiment_list));
             return Ok(request);
         }
 

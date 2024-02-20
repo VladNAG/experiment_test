@@ -17,5 +17,10 @@ namespace experiment_test.Data.Repository
         {
             return await _appDbContent.Experiments.Include(p => p.ExperimentOptions).FirstOrDefaultAsync(p => p.Name == name_experiment);
         }
+
+        public async Task<List<Experiment>> GetListExperimentAsync()
+        {
+           return await _appDbContent.Experiments.Include(p => p.ExperimentOptions).ToListAsync();
+        }
     }
 }

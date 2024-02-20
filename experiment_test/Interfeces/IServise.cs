@@ -1,5 +1,6 @@
 ﻿using experiment_test.Data.Entityes;
 using System.Reflection.Metadata;
+using experiment_test.StatisticEntityes;
 
 namespace experiment_test.Interfeces
 {
@@ -13,6 +14,7 @@ namespace experiment_test.Interfeces
         public Task<Result> GetResultAsync(Devise devise);
 
         public Task<List<Result>> GetListResultAsync(Experiment experiment);
-
+        public Task<List<Experiment>> GetListExperimentAsync();
+        public Task<List<object>> GetAllStatisticAsync(List<Experiment> experiment_list);
     }
 }
